@@ -52,7 +52,7 @@ _Example #2: Grafana summary allowing more detailed analysis of data collected, 
 
 ## Prerequisites
 
-- Docker
+- Docker (docker.io on debian)
 - Docker-compose
 - [Voltronic/Axpert/MPPSolar](https://www.ebay.com.au/sch/i.html?_from=R40&_trksid=p2334524.m570.l1313.TR11.TRC1.A0.H0.Xaxpert+inverter.TRS0&_nkw=axpert+inverter&_sacat=0&LH_TitleDesc=0&LH_PrefLoc=2&_osacat=0&_odkw=solar+inverter&LH_TitleDesc=0) based inverter that you want to monitor
 - Home Assistant [running with a MQTT Server](https://www.home-assistant.io/components/mqtt/)
@@ -64,7 +64,7 @@ It's pretty straightforward, just clone down the sources and set the configurati
 
 ```bash
 # Clone down sources on the host you want to monitor...
-git clone https://github.com/ned-kelly/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
+git clone https://github.com/catalinbordan/docker-voltronic-homeassistant.git /opt/ha-inverter-mqtt-agent
 cd /opt/ha-inverter-mqtt-agent
 
 # Configure the 'device=' directive (in inverter.conf) to suit for RS232 or USB.. 
@@ -74,6 +74,13 @@ vi config/inverter.conf
 # If your MQTT server does not need a username/password just leave these values empty.
 
 vi config/mqtt.json
+```
+On Debian and derivates:
+Add user to docker group (if not already added) and relogin
+and restart docker service
+```bash
+sudo usermod -aG docker $USER
+sudo service docker restart
 ```
 
 Then, plug in your Serial or USB cable to the Inverter & stand up the container:
@@ -167,7 +174,7 @@ Note that in addition to merging the sample Yaml files with your Home Assistant,
 
 Credit and many thanks for kchiem, dilyanpalauzov, nrm21,
 
-When you will use this fork you need to do the following commands on your device:
+For changing from another fork to this fork you need to do the following commands on your device:
 1) cd /opt/ha-inverter-mqtt-agent
 2) sudo docker-compose down
 3) cd ..
@@ -176,9 +183,8 @@ When you will use this fork you need to do the following commands on your device
 6) cd /opt/ha-inverter-mqtt-agent
 7) sudo nano config/inverter.conf (only edit this file if you don't have usb cable to inverter)
 8) sudo nano config/mqtt.json (change it with your variables)
-9) sudo docker-compose build
-10) sudo docker-compose up -d
-11) sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1' (this is to test to see is everything ok regarding connection between inverter and docker)
+9) sudo docker-compose up --build -d
+10) sudo docker exec -it voltronic-mqtt bash -c '/opt/inverter-cli/bin/inverter_poller -d -1' (this is to test to see is everything ok regarding connection between inverter and docker)
 
 this is the output result of my inverter:
 ````
