@@ -9,7 +9,7 @@ services:
     # Uncomment if you want to build your own local version.
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.multiarch
 
 
     container_name: voltronic-mqtt
